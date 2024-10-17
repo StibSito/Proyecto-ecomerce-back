@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <th:block th:replace="fragments/head :: head"></th:block>
+</head>
+
+<body>
+    <div class="site-wrap">
+        <th:block th:replace="fragments/header :: header"></th:block>
+
+        <div class="bg-light py-3" style="display: flex; justify-content: space-around;">
+            <div class="container" style="width: 30%">
+                <div class="row">
+                    <div class="col-md-12 mb-0">
+                        <a th:href="@{/}">Home</a> <span class="mx-2 mb-0">/</span> <strong class="text-black">Gestión de productos</strong>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container" style="width: 30%">
+                <form th:action="@{/buscarProducto}" method="get" class="mb-3">
+                    <div class="input-group">
+                        <input type="text" class="form-control" style="width: 300px" placeholder="Buscar por nombre" name="txtnombre">
+                        <button type="submit" class="btn btn-primary">Buscar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="site-section">
+            <div class="container">
+                <div class="row mb-5">
+                    <div class="col-md-12">
+                        <div class="site-blocks-table">
+                            <table class="table w-100">
+                                <thead>
+                                    <tr>
+                                        <th>Imagen</th>
+                                        <th>ID</th>
+                                        <th style="max-width: 120px">Nombre del producto</th>
+                                        <th>Precio</th>
+                                        <th>Categoria</th>
+                                        <th>Stock</th>
+                                        <th style="min-width: 195px">Editar / Eliminar</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <th:block th:each="p : ${lstCombinado}">
+                                        <tr>
+                                            <td class="product-thumbnail">
+                                                <img th:src="@{static/images/productos/{codigo}(codigo=${p.codigo})}" width="150px" alt="Image" class="img-fluid">
+                                            </td>
+                                            <td th:text="${p.codigo}"></td>
+                                            <td th:text="${p.descProd}"></td>
+                                            <td th:text="'S/.' + ${p.precio}"></td>
+                                            <td th:text="${p.descCate}"></td>
+                                            <td th:text="${p.stock}"></td>
+                                            <td>
+                                                <a th:href="@{/editProd(idprod=${p.codigo})}" class="btn btn-primary btn-sm" style="background-color: green; border-color: green">
+                                                    <span class="icon icon-pencil"></span>
+                                                </a>
+                                                <form th:action="@{/elimProd}" method="post" style="display: inline;">
+                                                    <input type="hidden" name="txtcodigo" th:value="${p.codigo}">
+                                                    <button type="submit" class="btn btn-danger btn-sm" style="background-color: red; border-color: red">
+                                                        <span class="icon icon-trash"></span>
+                                                    </button>
+                                                </form> 
+                                                <span th:text="${mensaje}"></span>
+                                            </td>
+                                        </tr>
+                                    </th:block>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row" style="z-index: 10">
+                    <div class="col-md-6">
+                        <div class="row mb-5">
+                            <div class="col-md-6 mb-3 mb-md-0">
+                                <button class="btn btn-primary btn-sm btn-block" data-toggle="modal" style="width: 250px; margin-bottom: 10px" data-target="#addProductModal">Agregar producto</button>
+                            </div>
+
+                            <div class="modal fade bd-example-modal-lg" id="addProductModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-lg modal-dialog-centered">
+                                    <form class="modal-content row g-3" th:action="@{/regProd}" method="post">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title text-black" id="addProductModalLabel">Información del Producto</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+
+                                        <div style="padding: 0">
+                                            <div class="p-3">
+                                                <div class="col-12">
+                                                    <label for="inputAddress" class="form-label">Codigo</label>
+                                                    <input class="form-control" id="inputcode" name="txtcodigo" placeholder="ingrese codigo">
+                                                </div>
+                                                <div class="col-12">
+                                                    <label for="inputAddress" class="form-label">Descripcion</label>
+                                                    <input type="text" class="form-control" id="inputDescription" name="txtdescripcion" placeholder="inrese nombre p descipcion del producto">
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label for="inputEmail4" class="form-label">Stock</label>
+                                                    <input type="number" class="form-control" id="inputstock" name="txtstock" placeholder="0">
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label for="inputPassword4" class="form-label">Precio</label>
+                                                    <input class="form-control" id="inputPrecio" name="txtprecio" placeholder="0.00" step="0.01">
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <label for="inputCity" class="form-label">Categoria</label>
+                                                    <select name="cboCategoria" id="inputState" class="form-select">
+                                                        <option selected value="0">Seleccion...</option>
+                                                        <th:block th:each="c : ${lstCategoria}">
+                                                            <option th:value="${c.idcategoria}" th:text="${c.descripcion}"></option>
+                                                        </th:block>
+                                                    </select>
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <label for="inputState" class="form-label">Estado</label>
+                                                    <select name="cboEstado" id="inputState" class="form-select">
+                                                        <option selected value="0">Seleccione...</option>
+                                                        <th:block th:each="e : ${lstEstado}">
+                                                            <option th:value="${e.idestado}" th:text="${e.descripcion}"></option>
+                                                        </th:block>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-outline-primary btn-sm btn-block" data-dismiss="modal" style="margin-top: 0">
+                                                    Cancelar
+                                                </button>
+                                                <button type="submit" class="btn btn-primary btn-sm btn-block" style="margin-top: 0">Guardar</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <th:block th:replace="fragments/footer :: footer"></th:block>
+    </div>
+
+    <th:block th:replace="fragments/scripts :: scripts"></th:block>
+</body>
+
+</html>

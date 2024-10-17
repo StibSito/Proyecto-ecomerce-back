@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<jsp:include page="templates/head.jsp" />
+
+<body>
+	<div class="site-wrap">
+		<jsp:include page="templates/header.jsp" />
+
+		<div class="bg-light py-3">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-12 mb-0">
+						<a href="/">Home</a> <span class="mx-2 mb-0">/</span> <strong
+							class="text-black">Profile</strong>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="site-section">
+			<div class="container">
+				<form class="row" action="actualiza" method="post">
+					<div class="col-md-4">
+
+
+						<li class="${order_history_active}"><a
+							href="order-history.jsp">Historial de pedidos</a></li>
+
+						<li class="${order_management_active}"><a
+							href="order-management.jsp">Gestión de pedidos</a></li>
+
+						<li class="${order-detail_active}"><a href="order-detail.jsp">Detalle
+								de la orden</a></li>
+
+
+
+
+						<c:if test="${c.tipo == 1}">
+                            <h2>ADMIN</h2>
+                            <li class="${product_management_active}"><a href="listar">Gestión
+                                    de productos</a></li>
+                        </c:if>
+					</div>
+
+					<div class="col-md-8 mb-5 mb-md-0">
+						<h2 class="h3 mb-3 text-black">información del perfil</h2>
+
+						<div class="p-3 p-lg-5 border">
+							<div class="col-md-6">
+								<input type="hidden" class="form-control" id="inputCodigo"
+									placeholder="Ingrese c�digo" value="${c.codigo}"
+									aria-describedby="emailHelp" name="codigo">
+							</div>
+							<div class="form-group row">
+
+								<div class="col-md-6">
+									<label for="first-name" class="text-black"> Nombres <span
+										class="text-danger">*</span>
+									</label> <input type="text" class="form-control" id="first-name"
+										name="nombres" value="${c.nombres}">
+								</div>
+
+								<div class="col-md-6">
+									<label for="last-name" class="text-black"> Apellidos <span
+										class="text-danger">*</span>
+									</label> <input type="text" class="form-control" id="last-name"
+										name="apellidos" value="${c.apellidos}">
+								</div>
+							</div>
+
+							<div class="form-group row">
+								<div class="col-md-12">
+									<label for="address" class="text-black">Actualizar
+										contrasenia : <span class="text-danger">*</span>
+									</label> <input type="text" class="form-control" id="address"
+										name="clave" value="${c.clave}">
+								</div>
+							</div>
+
+							<div class="form-group row mb-5">
+								<div class="col-md-6">
+									<label for="email" class="text-black"> correo
+										electrónico <span class="text-danger">*</span>
+									</label> <input type="text" class="form-control" id="email"
+										name="email" value="${c.email}">
+								</div>
+								<div class="col-md-6">
+									<label for="phone" class="text-black"> Numero <span
+										class="text-danger">*</span>
+									</label> <input type="text" class="form-control" id="phone"
+										name="celular" value="${c.celular}">
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label for="summary" class="text-black"> Resumen </label>
+
+								<textarea name="summary" id="summary" cols="30" rows="5"
+									class="form-control" placeholder="Write your notes here..."></textarea>
+							</div>
+
+							<div class="form-group">
+								<a href="login.jsp">
+									<button type="submit"
+										class="btn btn-primary btn-lg py-3 btn-block">
+										Actualización del perfil</button>
+								</a>
+
+							</div>
+						</div>
+					</div>
+				</form>
+				${mensaje}
+			</div>
+		</div>
+
+		<jsp:include page="templates/footer.jsp" />
+	</div>
+
+
+
+	<jsp:include page="templates/scripts.jsp" />
+</body>
+</html>

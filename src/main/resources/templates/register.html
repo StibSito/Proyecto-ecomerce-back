@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Registrarce</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/png" href="images/logo.png" />
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="vendor/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="fonts/Linearicons-Free-v1.0.0/icon-font.min.css">
+    <link rel="stylesheet" href="vendor/animate/animate.css">
+    <link rel="stylesheet" href="vendor/css-hamburgers/hamburgers.min.css">
+    <link rel="stylesheet" href="vendor/animsition/css/animsition.min.css">
+    <link rel="stylesheet" href="vendor/select2/select2.min.css">
+    <link rel="stylesheet" href="vendor/daterangepicker/daterangepicker.css">
+    <link rel="stylesheet" href="css/util.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/magnific-popup.css">
+    <link rel="stylesheet" href="css/jquery-ui.css">
+    <link rel="stylesheet" href="css/owl.carousel.min.css">
+    <link rel="stylesheet" href="css/owl.theme.default.min.css">
+    <link rel="stylesheet" href="css/aos.css">
+    <link rel="stylesheet" href="css/style.css">
+    
+    <!-- Bootstrap CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+<body>
+    <div class="limiter">
+        <div class="container-login100">
+            <div class="shadow-lg p-2 p-lg-5 rounded" data-aos="fade-up">
+                <div class="wrap-login100 p-t-50 p-b-90">
+                    <form action="registro" method="post">
+                        <div class="mb-3">
+                            <label for="exampleInputEmail1" class="form-label">Nombre</label>
+                            <input type="text" class="form-control" id="exampleInputEmail1" placeholder="ingrese su nombre" 
+                                name="nombres" aria-describedby="emailHelp">
+                        </div>
+                        <div class="mb-3">
+                            <label for="exampleInputPassword1" class="form-label">Apellido</label>
+                            <input type="text" class="form-control" id="exampleInputPassword1" 
+                                placeholder="ingrese su apellido" name="apellidos">
+                        </div>
+                        <div class="mb-3">
+                            <label for="exampleInputEmail" class="form-label">Usuario</label>
+                            <input type="email" class="form-control" id="exampleInputEmail" 
+                                placeholder="ingrese su usuario" name="email">
+                        </div>
+                        <div class="mb-3">
+                            <label for="exampleInputPassword1" class="form-label">Celular</label>
+                            <input type="text" class="form-control" id="exampleInputPassword1" 
+                                placeholder="ingrese su numero" name="celular">
+                        </div>
+                        <div class="mb-3">
+                            <label for="exampleInputPassword1" class="form-label">Contraseña:</label> 
+                            <input type="password" class="form-control" id="exampleInputPassword1" 
+                                placeholder="ingrese su contraseña" name="clave">
+                        </div>
+                        <div class="mb-3">
+                            <label for="repeatClave" class="form-label">Repetir:</label> 
+                            <input type="password" class="form-control" id="repeatClave" 
+                                placeholder="repita su contraseña" name="repeat-clave">
+                        </div>
+                        <div class="mb-3">
+                            <label for="fechaNacimiento" class="form-label">Fecha de nacimiento</label> 
+                            <input type="date" class="form-control" id="fechaNacimiento" 
+                                name="fecha">
+                        </div>
+                        <button type="submit" class="login100-form-btn">Registrar</button>
+                    </form>
+
+                </div>
+
+                <div class="text-center">
+                    <p class="txt1" style="color: #999999">
+                        ¿Ya tienes una cuenta? Crea Aquí <a href="/login" class="txt1">Entre aquí</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="dropDownSelect1"></div>
+
+    <!-- Scripts -->
+    <script src="vendor/jquery/jquery-3.2.1.min.js"></script>
+    <script src="vendor/bootstrap/js/popper.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
+    <script src="vendor/animsition/js/animsition.min.js"></script>
+    <script src="vendor/select2/select2.min.js"></script>
+    <script src="vendor/daterangepicker/moment.min.js"></script>
+    <script src="vendor/daterangepicker/daterangepicker.js"></script>
+    <script src="vendor/countdowntime/countdowntime.js"></script>
+    <script src="js/jquery-ui.js"></script>
+    <script src="js/owl.carousel.min.js"></script>
+    <script src="js/jquery.magnific-popup.min.js"></script>
+    <script src="js/aos.js"></script>
+    <script src="js/main.js"></script>
+
+    <script>
+        const imgInp = document.getElementById('imgInp'); // Asegúrate de tener un elemento con id="imgInp"
+        const blah = document.getElementById('blah'); // Asegúrate de tener un elemento con id="blah"
+        imgInp.onchange = evt => {
+            const [file] = imgInp.files;
+            if (file) {
+                blah.src = URL.createObjectURL(file);
+            }
+        }
+    </script>
+</body>
+
+</html>

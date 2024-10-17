@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Shoppers</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="icon" type="image/png" href="static/images/logo.png"/>
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Mukta:300,400,700">
+    <link rel="stylesheet" type="text/css" href="static/fonts/icomoon/style.css">
+
+    <link rel="stylesheet" href="static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="static/css/magnific-popup.css">
+    <link rel="stylesheet" href="static/css/jquery-ui.css">
+    <link rel="stylesheet" href="static/css/owl.carousel.min.css">
+    <link rel="stylesheet" href="static/css/owl.theme.default.min.css">
+
+
+    <link rel="stylesheet" href="static/css/aos.css">
+
+    <link rel="stylesheet" href="static/css/style.css">
+</head>
+
+<body>
+<div class="site-wrap">
+    <jsp:include page="templates/header.jsp"/>
+
+    <div class="bg-light py-3">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 mb-0">
+                    <a href="/"> Home </a>
+                    <span class="mx-2 mb-0">/</span>
+
+                    <a href="order-history">Historial de pedidos</a>
+                    <span class="mx-2 mb-0">/</span>
+
+                    <strong class="text-black">Detalle de la orden</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="site-section" data-aos="fade-in">
+        <div class="container">
+            <div class="row mb-5">
+                <div class="col-md-12">
+                    <div class="site-blocks-table">
+                        <table class="table table-bordered">
+                            <thead>
+                            <tr>
+                                <th>Producto ID</th>
+                                <th>Cantidad</th>
+                                <th>Precio</th>
+                                <th>Total</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <c:forEach items="${order_detail_list}" var="o">
+                                <tr>
+                                    <td>${o.product.id}</td>
+
+                                    <td>${o.quantity}</td>
+
+                                    <td>$${o.price}</td>
+
+                                    <td>$${o.price * o.quantity}</td>
+                                </tr>
+                            </c:forEach>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <jsp:include page="templates/footer.jsp"/>
+</div>
+
+<jsp:include page="templates/scripts.jsp"/>
+</body>
+</html>
