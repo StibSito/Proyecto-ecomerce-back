@@ -1,35 +1,37 @@
-<div class="site-section block-3 site-blocks-2 bg-light">
+<div class="site-section block-3 site-blocks-2 bg-light"
+	th:fragment="featured">
 
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-7 site-section-heading text-center pt-4">
-                <h2>Productos Destacados</h2>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-12">
-                <div class="nonloop-block-3 owl-carousel">
-                <%
-                List<Producto>  lstProductos = new GestionProducto().listado();
-                request.setAttribute("lstProductos", lstProductos);
-                %>
-                    <c:forEach items="${lstProductos}" var="p" begin="32" end="36">
-                        <div class="item">
-                            <div class="block-4 text-center">
-                                <figure class="block-4-image">
-                                    <a href="detailProd?q=${p.codigo}">
-                                        <img src="static/images/productos/${p.codigo}.png" alt="Image placeholder" class="img-fluid">
-                                    </a>
-                                </figure>
-                                <div class="block-4-text p-4">
-                                    <h3><a href="detailProd?q=${p.codigo}">${p.descripcion}</a></h3>
-                                    <p class="mb-0">$${p.precio}</p>
-                                </div>
-                            </div>
-                        </div>
-                    </c:forEach>
-                </div>
-            </div>
-        </div>
-    </div>
+	<div class="container">
+		<div class="row justify-content-center">
+			<div class="col-md-7 site-section-heading text-center pt-4">
+				<h2>Productos Destacados</h2>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12">
+				<div class="nonloop-block-3 owl-carousel">
+
+
+					<div class="item" th:each="p  : ${lstProductos}">
+						<div class="block-4 text-center">
+							<figure class="block-4-image">
+								<a th:href="@{/detail/{id}(id=${p.idprod})}"> <img
+									th:src="@{/images/productos/}+${p.idprod}+@{.png}"
+									alt="Image placeholder" class="img-fluid">
+								</a>
+							</figure>
+							<div class="block-4-text p-4">
+								<h3>
+									<a th:href="@{/detail/{id}(id=${p.idprod})}"
+										th:text="${p.descripcion}">${p.descripcion}</a>
+								</h3>
+								<p class="mb-0" th:text="${p.precio}">${p.precio}</p>
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</div>
 </div>

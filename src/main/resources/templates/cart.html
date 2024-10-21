@@ -1,153 +1,173 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Carro de Compras</title>
-    <th:block th:include="fragments/head :: head"></th:block>
+<title>Carro de Compras</title>
+<th:block th:include="fragments/head :: head"></th:block>
 </head>
 
 <body>
-    <div class="site-wrap">
-        <th:block th:include="fragments/header :: header"></th:block>
+	<div class="site-wrap">
+		<div th:include="fragments/header :: header"></div>
 
-        <div class="bg-light py-3">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-12 mb-0">
-                        <a href="/">Home</a> <span class="mx-2 mb-0">/</span> <strong class="text-black">Carrito</strong>
-                    </div>
-                </div>
-            </div>
-        </div>
+		<div class="bg-light py-3">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-12 mb-0">
+						<a href="/">Home</a> <span class="mx-2 mb-0">/</span> <strong
+							class="text-black">Carrito</strong>
+					</div>
+				</div>
+			</div>
+		</div>
 
-        <div th:if="${cantArticulos == 0}" style="text-align: center;">
-            <h1>Carro de compra</h1>
-            <img alt="" th:src="@{/static/images/productos/vacio.png}">
-            <p>
-                Su carrito de compras está vacío, pulse <a th:href="@{/filtro(categoria=0)}">aquí</a> para empezar a comprar
-            </p>
-        </div>
+		<div th:if="${cantArticulos == 0}" style="text-align: center;">
+			<h1>Carro de compra</h1>
+			<img alt="" th:src="@{/static/images/productos/vacio.png}">
+			<p>
+				Su carrito de compras está vacío, pulse <a
+					th:href="@{/filtro(categoria=0)}">aquí</a> para empezar a comprar
+			</p>
+		</div>
 
-        <div th:if="${cantArticulos > 0}">
-            <form class="container" method="post" action="@{/checkout}">
-                <div class="row mb-5">
-                    <div class="col-md-12">
-                        <div class="site-blocks-table">
-                            <table class="table table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th class="product-thumbnail">Imagen</th>
-                                        <th class="product-name">Producto</th>
-                                        <th class="product-price">Precio</th>
-                                        <th class="product-quantity">Cantidad</th>
-                                        <th class="product-total">Total</th>
-                                        <th class="product-remove">Eliminar</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <th:block th:each="d : ${carro}">
-                                        <tr>
-                                            <td class="product-thumbnail">
-                                                <img th:src="@{/static/images/productos/${d.idprod}.png}" alt="Image" class="img-fluid">
-                                            </td>
-                                            <td>
-                                                <input name="product-name" class="form-control-plaintext h5 text-black"
-                                                    th:value="${d.nomProd}" style="text-align: center" readonly>
-                                            </td>
-                                            <td>
-                                                <label class="form-control-plaintext h5 text-black" style="text-align: center">
-                                                    <span th:text="${#numbers.formatCurrency(d.preciovta)}"></span>
-                                                </label>
-                                            </td>
-                                            <td style="min-width: 180px">
-                                                <div class="input-group" style="max-width: fit-content; margin: 0;">
-                                                    <div class="input-group-prepend">
-                                                        <button class="btn btn-outline-primary js-btn-minus" type="button">&minus;</button>
-                                                    </div>
-                                                    <input name="product-quantity" type="text" class="form-control text-center" 
-                                                        th:value="${d.cantidad}" placeholder="">
-                                                    <div class="input-group-append">
-                                                        <button class="btn btn-outline-primary js-btn-plus" type="button">&plus;</button>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <label class="form-control-plaintext h5 text-black" style="text-align: center">
-                                                    <span th:text="${#numbers.formatCurrency(d.importe)}"></span>
-                                                </label>
-                                            </td>
-                                            <td><a th:href="@{/cart(removeProductId=${d.idprod})}" class="btn btn-primary btn-sm">X</a></td>
-                                        </tr>
-                                    </th:block>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
+		<div th:if="${cantArticulos > 0}">
+			<form class="container" method="post" action="@{/checkout}">
+				<div class="row mb-5">
+					<div class="col-md-12">
+						<div class="site-blocks-table">
+							<table class="table table-bordered">
+								<thead>
+									<tr>
+										<th class="product-thumbnail">Imagen</th>
+										<th class="product-name">Producto</th>
+										<th class="product-price">Precio</th>
+										<th class="product-quantity">Cantidad</th>
+										<th class="product-total">Total</th>
+										<th class="product-remove">Eliminar</th>
+									</tr>
+								</thead>
+								<tbody>
+									<th:block th:each="d : ${carro}">
+										<tr>
+											<td class="product-thumbnail"><img
+												th:src="@{/static/images/productos/${d.idprod}.png}"
+												alt="Image" class="img-fluid"></td>
+											<td><input name="product-name"
+												class="form-control-plaintext h5 text-black"
+												th:value="${d.nomProd}" style="text-align: center" readonly>
+											</td>
+											<td><label class="form-control-plaintext h5 text-black"
+												style="text-align: center"> <span
+													th:text="${#numbers.formatCurrency(d.preciovta)}"></span>
+											</label></td>
+											<td style="min-width: 180px">
+												<div class="input-group"
+													style="max-width: fit-content; margin: 0;">
+													<div class="input-group-prepend">
+														<button class="btn btn-outline-primary js-btn-minus"
+															type="button">&minus;</button>
+													</div>
+													<input name="product-quantity" type="text"
+														class="form-control text-center" th:value="${d.cantidad}"
+														placeholder="">
+													<div class="input-group-append">
+														<button class="btn btn-outline-primary js-btn-plus"
+															type="button">&plus;</button>
+													</div>
+												</div>
+											</td>
+											<td><label class="form-control-plaintext h5 text-black"
+												style="text-align: center"> <span
+													th:text="${#numbers.formatCurrency(d.importe)}"></span>
+											</label></td>
+											<td><a th:href="@{/cart(removeProductId=${d.idprod})}"
+												class="btn btn-primary btn-sm">X</a></td>
+										</tr>
+									</th:block>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
 
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="row mb-5">
-                            <div class="col-md-6 mb-3 mb-md-0">
-                                <a th:href="@{/filtro(categoria=0)}" class="btn btn-outline-primary btn-sm btn-block">Seguir comprando</a>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <label class="text-black h4" for="coupon">Cupón</label>
-                                <p>Ingrese su código de cupón si tiene uno.</p>
-                            </div>
-                            <div class="col-md-8 mb-3 mb-md-0">
-                                <input type="text" class="form-control py-3" id="coupon" placeholder="Código de Cupón">
-                            </div>
-                            <div class="col-md-4">
-                                <button class="btn btn-primary btn-sm">Aplicar cupón</button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6 pl-5">
-                        <div class="row justify-content-end">
-                            <div class="col-md-7">
-                                <div class="row">
-                                    <div class="col-md-12 text-right border-bottom mb-5">
-                                        <h3 class="text-black h4 text-uppercase">Totales del carrito</h3>
-                                    </div>
-                                </div>
-                                <div class="row mb-5">
-                                    <div class="col-md-6">
-                                        <span class="text-black" style="font-size: 1.5em">Total :</span>
-                                    </div>
-                                    <div class="col-md-6 text-right">
-                                        <label class="form-control-plaintext h5 text-black" style="text-align: center">
-                                            <span th:text="${#numbers.formatCurrency(subTotalVenta)}"></span>
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="row mb-5">
-                                    <div class="col-md-6">
-                                        <span class="text-black" style="font-size: 1.5em">Cantidad de productos :</span>
-                                    </div>
-                                    <div class="col-md-6 text-right">
-                                        <label class="form-control-plaintext h5 text-black" style="text-align: center"
-                                            th:text="${cantArticulos}"></label>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <a th:href="@{/checkout}" class="btn btn-primary btn-lg py-3 btn-block">Pasar por la caja</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </form>
-        </div>
+				<div class="row">
+					<div class="col-md-6">
+						<div class="row mb-5">
+							<div class="col-md-6 mb-3 mb-md-0">
+								<a th:href="@{/filtro(categoria=0)}"
+									class="btn btn-outline-primary btn-sm btn-block">Seguir
+									comprando</a>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-12">
+								<label class="text-black h4" for="coupon">Cupón</label>
+								<p>Ingrese su código de cupón si tiene uno.</p>
+							</div>
+							<div class="col-md-8 mb-3 mb-md-0">
+								<input type="text" class="form-control py-3" id="coupon"
+									placeholder="Código de Cupón">
+							</div>
+							<div class="col-md-4">
+								<button class="btn btn-primary btn-sm">Aplicar cupón</button>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-6 pl-5">
+						<div class="row justify-content-end">
+							<div class="col-md-7">
+								<div class="row">
+									<div class="col-md-12 text-right border-bottom mb-5">
+										<h3 class="text-black h4 text-uppercase">Totales del
+											carrito</h3>
+									</div>
+								</div>
+								<div class="row mb-5">
+									<div class="col-md-6">
+										<span class="text-black" style="font-size: 1.5em">Total
+											:</span>
+									</div>
+									<div class="col-md-6 text-right">
+										<label class="form-control-plaintext h5 text-black"
+											style="text-align: center"> <span
+											th:text="${#numbers.formatCurrency(subTotalVenta)}"></span>
+										</label>
+									</div>
+								</div>
+								<div class="row mb-5">
+									<div class="col-md-6">
+										<span class="text-black" style="font-size: 1.5em">Cantidad
+											de productos :</span>
+									</div>
+									<div class="col-md-6 text-right">
+										<label class="form-control-plaintext h5 text-black"
+											style="text-align: center" th:text="${cantArticulos}"></label>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-12">
+										<a th:href="@{/checkout}"
+											class="btn btn-primary btn-lg py-3 btn-block">Pasar por
+											la caja</a>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
 
-        <div class="site-section"></div>
+		<div class="site-section"></div>
 
-        <th:block th:include="fragments/footer :: footer"></th:block>
-    </div>
+		<div th:include="fragments/footer :: footer"></div>
+	</div>
 
-    <th:block th:include="fragments/scripts :: scripts"></th:block>
+	<script src="/js/jquery-3.3.1.min.js"></script>
+	<script src="/js/bootstrap.min.js"></script>
+	<script src="/js/jquery.magnific-popup.min.js"></script>
+	<script src="/js/jquery-ui.js"></script>
+	<script src="/js/owl.carousel.min.js"></script>
+	<script src="/js/aos.js"></script>
+	<script src="/js/main.js"></script>
 </body>
 </html>
