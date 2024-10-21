@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
-<jsp:include page="templates/head.jsp" />
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<div th:replace="fragments/head :: head"></div>
 
 <body>
 	<div class="site-wrap">
-		<jsp:include page="templates/header.jsp" />
+		<div th:replace="fragments/header :: header"></div>
 
 		<div class="bg-light py-3">
 			<div class="container">
@@ -17,10 +17,10 @@
 			</div>
 		</div>
 
-		<div class="site-section">
+		<div class="site-section" style="width: 100%;">
 			<div class="container">
 
-				<div class="row mb-5">
+				<div class="row mb-5" style="width: 100%;">
 					<div class="col-md-9 order-2">
 
 						<div class="row">
@@ -31,112 +31,123 @@
 								<div class="d-flex"></div>
 							</div>
 						</div>
-						<div class="row mb-5">
-							<c:forEach items="${lstProductos}" var="p">
-								<div class="col-sm-6 col-lg-4 mb-4" data-aos="fade-up">
-									<div class="block-4 text-center border" style="height: 100%">
-										<figure class="block-4-image">
+						<div class="row mb-5" style="width: 100%;">
 
-											<img src="static/images/productos/${p.codigo}.png"
-												alt="Image placeholder" class="img-fluid"
-												style="height: 100%">
 
-										</figure>
-										<div class="block-4-text p-4">
-											<h3>${p.descripcion}</h3>
-											<p class="mb-0">S/${p.precio}</p>
-											<a class="btn btn-outline-danger " href="detailProd?q=${p.codigo}">Agregar</a>
-										</div>
+							<div class="row">
+								<div class="card" style="width: 12rem; margin: 5px"
+									th:each="p : ${lstProductos}">
+									<img th:src="@{/images/productos/}+${p.idprod}+@{.png}"
+										th:alt="${'Producto '}+${p.idprod}" width="100px"
+										height="200px" class="card-img-top" style="padding: 5px">
+									<div class="card-body">
+										<h5 th:text="${p.descripcion}" class="card-title">###</h5>
+										<p th:text="${p.stock}+' Unidades'" class="card-text">###</p>
+										<p
+											th:text="${'S/'}+${#numbers.formatDecimal(p.precio, 1, 'COMMA', 2, 'POINT' )}"
+											class="card-text" style="color: red; font-weight: bold;">###</p>
+										<a th:href="@{/detail/{id}(id=${p.idprod})}"
+											class="btn btn-outline-primary">Agregar </a>
 									</div>
 								</div>
-							</c:forEach>
-						</div>
-						<div class="row" data-aos="fade-up">
-							<div class="col-md-12 text-center">
-								<div class="site-block-27">
-									<ul>
-										<c:if test="${page_active > 1}">
-											<li><a href="shop?index=${page_active - 1}">&lt;</a></li>
-										</c:if>
-
-										<c:forEach begin="1" end="${total_pages}" var="i">
-											<li class="${(page_active == i) ? "active" : " "}"><a
-												href="shop?index=${i}">${i}</a></li>
-										</c:forEach>
-
-										<c:if test="${page_active < total_pages}">
-											<li><a href="shop?index=${page_active + 1}">&gt;</a></li>
-										</c:if>
-									</ul>
-								</div>
 							</div>
+
+
 						</div>
+
 					</div>
 
-					<div class="col-md-3 order-1 mb-5 mb-md-0 w-100" style="width: 100%;">
+					<div class="col-md-3 order-1 mb-4 mb-md-0 w-100"
+						style="width: 100%;">
+						<div>
+							<h3>Filtros</h3>
+							<div style="width: auto;">
 
-						<h3 class="mb-3 h6 text-uppercase text-black d-block">Categorías</h3>
-						<form action="filtro" method="post" style="width: 300px">
-							<%
-							//obtener un listado de categorias
-							List<Categoria> lstCategorias = new GestionCategoria().listado();
-							//enviar listado como atributo
-							request.setAttribute("lstCategorias", lstCategorias);
-							%>
+								<ul style="list-style-type: disc; padding-left: 20px;">
+									<!-- Usa disc para puntos -->
+									<li><a href="/precio/fijo/100">Hasta S/. 100.00</a></li>
+									<li><a href="/precio/fijo/1000">Hasta S/. 1000.00</a></li>
+								</ul>
 
-							<%--Combo  o lista de opciones  --%>
+
+							</div>
+							<form action="/products/filter/price/between" method="post"
+								style="display: flex; gap: 10px;">
+								<input type="number" id="minPrice" name="minPrice" step="0.01"
+									placeholder="mínimo" min="1"
+									style="width: 80px; padding: 5px; font-size: 14px; border-radius: 5px">
+								<input type="number" id="maxPrice" name="maxPrice" step="0.01"
+									placeholder="máximo" required
+									style="width: 80px; padding: 5px; font-size: 14px; border-radius: 5px">
+
+								<button type="submit"
+									style="padding: 5px 10px; font-size: 15px; border-radius: 50%; background-color: lightblue; color: white;">&gt;</button>
+							</form>
+						</div>
+
+						<div>
+							<h3>Categorías</h3>
+
+
+							<div style="width: auto;">
+								<ul style="list-style-type: disc; padding-left: 20px;">
+									<!-- Usa disc para puntos -->
+									<li th:each="c : ${lstCategorias}"><a
+										th:text="${c.descripcion}"
+										th:href="@{/filtro/{id}(id=${c.id})}"
+										style="text-decoration: underline;">${c.descripcion}</a></li>
+								</ul>
+							</div>
+						</div>
+
+
+
+
+						<form action="/reportes/catalogo/filtro" target="_blank"
+							method="post" style="width: 100%">
+							<h2>Reportes</h2>
+
 							<div class="col-md-4">
-								<select id="inputState" class="form-select" name="cboCategoria">
+								<select id="inputState" class="form-select" name="id">
 									<option selected value="0">Seleccione...</option>
-									<c:forEach items="${lstCategorias}" var="c">
-
-										<option value="${c.idcategoria}">${c.descripcion}</option>
-									</c:forEach>
+									<option th:each="c : ${lstCategorias} " th:value="${c.id}"
+										th:text="${c.descripcion}"></option>
 								</select>
 							</div>
 
 
-							<%-- lista con checkbox :
-		
-					<c:forEach items="${lstCategorias}" var="c">
-						<div class="form-check">
-							<input class="form-check-input" type="checkbox"
-								value="${c.idcategoria}" id="flexCheckDefault"> <label
-								class="form-check-label" for="flexCheckDefault">
-								${c.descripcion} </label>
-
-						</div>
-					</c:forEach>
-					
-					 --%>
-
-
-							<%--boton del formulario --%>
-							<div class="row">
+							<div class="row" style="margin-bottom: 10px">
 								<div class="col-12 mt-4">
-									<!-- Añade la clase 'mt-4' para dar margen en la parte superior -->
+
 									<div class="col-12">
-										<!-- Usa 'col-12' para ocupar todo el ancho en dispositivos pequeños -->
-										<button type="submit" class="btn btn-primary">Aplicar</button>
+
+										<button type="submit" class="btn btn-primary">Filtrar</button>
+
 									</div>
 								</div>
 							</div>
-							<div class="col-md-3 order-1 mb-5 mb-md-0" style="width: 100%">
-							<%--cateogrias listadas con ancords --%>
-							<c:forEach items="${lstCategorias }"  var="c">
-								<a style="text-decoration: underline;width: 100%" href="filtro?categoria=${c.idcategoria}">${c.descripcion }</a>
-							</c:forEach>
-							</div>
 
 						</form>
+						<div>
+
+							<a type="button" href="/reportes/catalogo" target="blank"
+								class="btn btn-primary" style="margin-left: 15px"> Catalogo
+							</a>
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
 
-	<jsp:include page="templates/footer.jsp" />
+	<div th:replace="fragments/footer :: footer"></div>
 
-	<jsp:include page="templates/scripts.jsp" />
+	<script src="/js/jquery-3.3.1.min.js"></script>
+	<script src="/js/bootstrap.min.js"></script>
+	<script src="/js/jquery.magnific-popup.min.js"></script>
+	<script src="/js/jquery-ui.js"></script>
+	<script src="/js/owl.carousel.min.js"></script>
+	<script src="/js/aos.js"></script>
+	<script src="/js/main.js"></script>
 </body>
 </html>

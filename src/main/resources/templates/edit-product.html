@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
-<jsp:include page="templates/head.jsp" />
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<th:block th:replace="~{fragments/head :: head}"></th:block>
 
 <body>
 	<div class="site-wrap">
-		<jsp:include page="templates/header.jsp" />
+		<div th:replace="~{fragments/header :: header}"></div>
 
 		<div class="bg-light py-3">
 			<div class="container">
@@ -25,107 +25,74 @@
 					</div>
 
 					<div class="col-md-7">
-						<form action="actProd" method="post">
+						<form action="/updateprod" method="post" th:object="${producto}">
 							<div class="p-3 border">
 								<div class="form-group row">
 									<div class="col-md-12">
 										<label for="id" class="text-black"> Producto ID <span
-											class="text-danger">*</span>
-										</label> <input name="txtcodigo" type="text" class="form-control"
-											id="id" value="${p.codigo}" readonly>
+											class="text-danger">*</span></label> <input name="idprod" type="text"
+											class="form-control" id="id" th:field="*{idprod}" readonly>
 									</div>
 								</div>
-
 
 								<div class="form-group row">
 									<div class="col-md-12">
 										<label for="image" class="text-black"> Imagen <span
-											class="text-danger">*</span>
-										</label> <input name="product-image" type="file" class="form-control"
-											id="image">
+											class="text-danger">*</span></label> <input name="product-image"
+											type="file" class="form-control" id="image">
 									</div>
 								</div>
 
 								<div class="form-group row">
 									<div class="col-md-12">
 										<label for="price" class="text-black"> Precio <span
-											class="text-danger">*</span>
-										</label> <input name="txtprecio" placeholder="0.00" step="0.01"
-											class="form-control" id="price" value="${p.precio}">
+											class="text-danger">*</span></label> <input name="precio"
+											type="number" step="0.01" class="form-control" id="price"
+											th:field="*{precio}">
 									</div>
 								</div>
 
 								<div class="form-group row">
 									<div class="col-md-12">
 										<label for="description" class="text-black">
-											Descripcion <span class="text-danger">*</span>
+											Descripción <span class="text-danger">*</span>
 										</label>
-
-										<textarea name="txtdescripcion" id="description" cols="30"
-											rows="7" class="form-control">${p.descripcion}</textarea>
+										<textarea name="descripcion" id="description" cols="30"
+											rows="7" class="form-control" th:field="*{descripcion}"></textarea>
 									</div>
 								</div>
 
 								<div class="form-group row">
 									<div class="col-md-12">
-										<label for="price" class="text-black"> Stock <span
-											class="text-danger">*</span>
-										</label> <input name="txtstock"
-											class="form-control" id="price" value="${p.stock}">
+										<label for="stock" class="text-black"> Stock <span
+											class="text-danger">*</span></label> <input name="stock"
+											type="number" class="form-control" id="stock"
+											th:field="*{stock}">
 									</div>
 								</div>
 
 								<div class="form-group row">
 									<div class="col-md-12">
-										<%
-										//obtener un listado de categorias
-										List<Categoria> lstCategorias = new GestionCategoria().listado();
-										//enviar listado como atributo
-										request.setAttribute("lstCategorias", lstCategorias);
-										%>
-										<label for="category" class="text-black"> Categoria <span
-											class="text-danger">*</span>
-										</label> <select name="cboCategoria" id="category"
-											class="form-control">
-
-											<c:forEach items="${lstCategorias}" var="c">
-												<c:if test="${p.idcategoria == c.idcategoria }">
-													<option selected value="${c.idcategoria }">${c.descripcion }</option>
-
-												</c:if>
-												<c:if test="${p.idcategoria != c.idcategoria }">
-													<option value="${c.idcategoria }">${c.descripcion }</option>
-
-												</c:if>
-											</c:forEach>
+										<label for="category" class="text-black"> Categoría <span
+											class="text-danger">*</span></label> <select name="idcategoria"
+											id="category" class="form-control" th:field="*{idcategoria}">
+											<option value="0">Seleccione...</option>
+											<option th:each="c : ${lstCategorias}" th:value="${c.id}"
+												th:text="${c.descripcion}"
+												th:selected="${producto.objCategoria != null and c.id == producto.objCategoria.id}"></option>
 										</select>
 									</div>
 								</div>
+
 								<div class="form-group row">
 									<div class="col-md-12">
-										<label for="product-category" class="text-black">
-											Estado <span class="text-danger">*</span>
-										</label>
-
-										<%
-										//obtener un listado de categorias
-										List<Estado> lstEstados = new GestionEstado().listado();
-										//enviar listado como atributo
-										request.setAttribute("lstEstados", lstEstados);
-										%>
-										<select name="cboEstado" id="product-category"
-											class="form-control">
-								
-											<c:forEach items="${lstEstados}" var="e">
-												<c:if test="${p.idestado == e.idestado }">
-													<option selected value="${e.idestado }">${e.descripcion }</option>
-
-												</c:if>
-												<c:if test="${p.idestado != e.idestado}">
-													<option value="${e.idestado }">${e.descripcion }</option>
-
-												</c:if>
-											</c:forEach>
+										<label for="estado" class="text-black"> Estado <span
+											class="text-danger">*</span></label> <select name="estado"
+											id="estado" class="form-control" th:field="*{estado}">
+											<option value="0">Seleccione...</option>
+											<option th:each="e : ${lstEstados}" th:value="${e.idestado}"
+												th:text="${e.descripcion}"
+												th:selected="${producto.estado == e.idestado}"></option>
 										</select>
 									</div>
 								</div>
@@ -133,7 +100,7 @@
 								<div class="form-group row">
 									<div class="col-lg-12">
 										<input type="submit" class="btn btn-primary btn-lg btn-block"
-											value="Edit product">
+											value="Editar Producto"> 
 									</div>
 								</div>
 							</div>
@@ -142,7 +109,8 @@
 
 					<div class="col-md-5 ml-auto">
 						<div class="p-3 border">
-							<img alt="image" src="static/images/productos/${p.codigo}.png"
+							<img alt="Imagen del Producto"
+								th:src="@{/static/images/productos/{id}.png(id=${producto.idprod})}"
 								width="100%">
 						</div>
 					</div>
@@ -150,9 +118,15 @@
 			</div>
 		</div>
 
-		<jsp:include page="templates/footer.jsp" />
+		<div th:replace="~{fragments/footer :: footer}"></div>
 	</div>
 
-	<jsp:include page="templates/scripts.jsp" />
+	<script src="/js/jquery-3.3.1.min.js"></script>
+	<script src="/js/bootstrap.min.js"></script>
+	<script src="/js/jquery.magnific-popup.min.js"></script>
+	<script src="/js/jquery-ui.js"></script>
+	<script src="/js/owl.carousel.min.js"></script>
+	<script src="/js/aos.js"></script>
+	<script src="/js/main.js"></script>
 </body>
 </html>
