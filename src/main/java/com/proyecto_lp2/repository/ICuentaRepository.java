@@ -9,5 +9,6 @@ import com.proyecto_lp2.model.Cuenta;
 
 @Repository
 public interface ICuentaRepository extends JpaRepository<Cuenta, Integer> {
+	
     Optional<Cuenta> findByEmail(String email);
 }
