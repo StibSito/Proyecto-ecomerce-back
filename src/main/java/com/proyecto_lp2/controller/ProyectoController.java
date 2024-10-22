@@ -1,65 +1,86 @@
 package com.proyecto_lp2.controller;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import com.proyecto_lp2.model.Cuenta;
+import com.proyecto_lp2.model.Producto;
+import com.proyecto_lp2.repository.ICategoriaRepository;
+import com.proyecto_lp2.repository.ICuentaRepository;
+import com.proyecto_lp2.repository.IEstadosRepository;
+import com.proyecto_lp2.repository.IProductoRepository;
 
 @Controller
 public class ProyectoController {
 
+	@Autowired
+	ICategoriaRepository icate;
+
+	@Autowired
+	IProductoRepository iprod;
+
+	@Autowired
+	IEstadosRepository iest;
+
 	@GetMapping("/")
-	public String index() {
-		return "index";
+	public String index(Model model) {
+		model.addAttribute("lstCategorias", icate.findAll()); 
+		model.addAttribute("lstProductos", iprod.findAll());
+
+		return "index"; 
 	}
-	
+
 	@GetMapping("/about")
 	public String about() {
-	        return "about";  // about.html
+		return "about"; 
 	}
-	
+
 	@GetMapping("/cart")
 	public String cart() {
-	        return "cart";  // about.html
-	    }
+		return "cart";
+	}
+
+	@GetMapping("/gestionProductos")
+	public String mostrarGestionProductos(Model model) {
+		model.addAttribute("producto", new Producto());
+		model.addAttribute("lstProductos", iprod.findAll());
+		model.addAttribute("lstCategorias", icate.findAll());
+		model.addAttribute("lstEstados", iest.findAll());
+		return "product-management";
+	}
+
+	@GetMapping("/gracias")
+	public String gracias() {
+		return "thankyou";
+	}
+
+	@GetMapping("/login")
+	public String showLoginPage() {
+		return "login";
+	}
+	
 	
 
-    @GetMapping("/gestionProductos")
-    public String mostrarGestionProductos() {
-        return "product-management"; // Nombre de la vista Thymeleaf (gestionProductos.html)
-    }
-    
-    @GetMapping("/gracias")
-    public String gracias() {
-        return "thankyou"; // nombre de la plantilla HTML sin la extensión
-    }
-    
-    @GetMapping("/login")
-    public String showLoginPage() {
-        return "login"; // Devuelve el nombre de la vista (login.html)
-    }
-    
-    @GetMapping("/checkout")
-    public String checkout() {
-        return "checkout"; 
-    }
-    
-    @GetMapping("/registrar")
-    public String registrar() {
-        return "register"; 
-    }
-    
-    
-    @GetMapping("/contacto")
-    public String contacto() {
-        return "contact"; 
-    }
-    
-    @GetMapping("/gestor-productos")
-    public String gestorproductos() {
-        return "product-management"; 
-    }
-    
+
+	@GetMapping("/checkout")
+	public String checkout() {
+		return "checkout";
+	}
+
+	@GetMapping("/registrar")
+	public String registrar() {
+		return "register";
+	}
+
+	@GetMapping("/contacto")
+	public String contacto() {
+		return "contact";
+	}
 
 }

@@ -1,19 +1,22 @@
-<div class="site-section site-blocks-2">
-    <div class="container">
-        <div class="row">
-            <!-- Usamos Thymeleaf para iterar sobre la lista de categorías -->
-            <div th:each="c : ${lstCategorias}" class="col-sm-6 col-md-6 col-lg-4 mb-4 mb-lg-0" data-aos="fade" data-aos-delay="">
-                <a class="block-2-item" th:href="@{/filtro(categoria=${c.idcategoria})}">
-                    <figure class="image">
-                        <img th:src="@{/images/categoria/{idcategoria}.png(idcategoria=${c.idcategoria})}" alt="image" class="img-fluid">
-                    </figure>
+<div class="site-section site-blocks-2" th:fragment="collection">
+	<div class="container">
+		<div class="row">
+			<!-- Usamos Thymeleaf para iterar sobre la lista de categorías -->
+			<div th:each="c : ${lstCategorias}"
+				class="col-sm-6 col-md-6 col-lg-4 mb-4 mb-lg-0" data-aos="fade"
+				data-aos-delay="">
+				<a class="block-2-item" th:href="@{/filtro/{id}(id=${c.id})}">
+					<figure class="image">
+						<img th:src="@{/images/categoria/}+${c.id}+@{.png}" alt="image"
+							class="img-fluid">
+					</figure>
 
-                    <div class="text">
-                        <span class="text-uppercase">Colecciones</span>
-                        <h3 th:text="${c.descripcion}"></h3>
-                    </div>
-                </a>
-            </div>
-        </div>
-    </div>
+					<div class="text">
+						<span class="text-uppercase">Colecciones</span>
+						<h3 th:text="${c.descripcion}"></h3>
+					</div>
+				</a>
+			</div>
+		</div>
+	</div>
 </div>
