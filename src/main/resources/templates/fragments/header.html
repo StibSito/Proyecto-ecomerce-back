@@ -17,7 +17,7 @@
                     <div class="site-top-icons">
                         <ul>
                             <li th:if="${session.account != null}">
-                                <img class="icon" th:src="${account.base64Image != null} ? 'data:image/jpg;base64,' + ${account.base64Image} : '/static/images/blank_avatar.png'"
+                                <img class="icon" th:src="${account.base64Image != null} ? 'data:image/jpg;base64,' + ${account.base64Image} : '/images/blank_avatar.png'"
                                      id="dropdownMenuReference"
                                      data-bs-toggle="dropdown" alt="image"
                                      style="width: 1.5em; border-radius: 50%; margin-right: 10px; margin-bottom: 10px" />
@@ -29,7 +29,7 @@
                             <li th:if="${session.account == null}">
                                 <a href="/login"><span class="icon icon-person"></span></a>
                             </li>
-                            <li>
+                            <li>	
                                 <a href="/cart" class="site-cart">
                                     <span class="icon icon-shopping_cart"></span>
                                     <span class="count" th:text="${cantArticulos}">0</span>
