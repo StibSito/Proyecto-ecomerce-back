@@ -11,6 +11,8 @@ import com.proyecto_lp2.repository.ICategoriaRepository;
 import com.proyecto_lp2.repository.IEstadosRepository;
 import com.proyecto_lp2.repository.IProductoRepository;
 
+import jakarta.servlet.http.HttpSession;
+
 @Controller
 public class ProyectoController {
 
@@ -24,59 +26,42 @@ public class ProyectoController {
 	IEstadosRepository iest;
 
 	@GetMapping("/")
-	public String index(Model model) {
-		model.addAttribute("lstCategorias", icate.findAll()); 
+	public String index(Model model, HttpSession session) {
+		model.addAttribute("lstCategorias", icate.findAll());
 		model.addAttribute("lstProductos", iprod.findAll());
-
-		return "index"; 
+		model.addAttribute("cantArticulos", session.getAttribute("cantArticulos"));
+		return "index";
 	}
 
 	@GetMapping("/about")
-	public String about() {
-		return "about"; 
+	public String about(Model model, HttpSession session) {
+		model.addAttribute("cantArticulos", session.getAttribute("cantArticulos"));
+		return "about";
 	}
 
-	@GetMapping("/cart")
-	public String cart() {
-		return "cart";
-	}
-
-	@GetMapping("/gestionProductos")
-	public String mostrarGestionProductos(Model model) {
-		model.addAttribute("producto", new Producto());
-		model.addAttribute("lstProductos", iprod.findAll());
-		model.addAttribute("lstCategorias", icate.findAll());
-		model.addAttribute("lstEstados", iest.findAll());
-		return "product-management";
-	}
+	
 
 	@GetMapping("/gracias")
-	public String gracias() {
+	public String gracias(Model model,HttpSession session) {
+		model.addAttribute("cantArticulos", session.getAttribute("cantArticulos"));
 		return "thankyou";
 	}
 
 	@GetMapping("/login")
-	public String showLoginPage() {
+	public String showLoginPage(Model model, HttpSession session) {
+		model.addAttribute("cantArticulos", session.getAttribute("cantArticulos"));
 		return "login";
 	}
-	
-	
 
 
-	@GetMapping("/checkout")
-	public String checkout() {
-		return "checkout";
-	}
-
-	@GetMapping("/registrar")
-	public String registrar(Model model) {
-		model.addAttribute("cuenta", new Cuenta());
-		return "register";
-	}
 
 	@GetMapping("/contacto")
-	public String contacto() {
+	public String contacto(Model model, HttpSession session) {
+		model.addAttribute("cantArticulos", session.getAttribute("cantArticulos"));
 		return "contact";
 	}
 
+	
+	
+	
 }

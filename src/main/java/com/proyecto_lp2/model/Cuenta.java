@@ -5,6 +5,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
 
@@ -14,7 +16,8 @@ import lombok.Data;
 public class Cuenta {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer codigo;
+	@Column(name = "codigo")
+	private int idcuenta;
 
 	private String nombre;
 	private String apellido;
@@ -24,6 +27,15 @@ public class Cuenta {
 	private String celular;
 	private String clave;
 	private String fnacim;
-	private Integer tipo;
-	private Integer estado;
+	private int tipo;
+	private int estado;
+
+	@ManyToOne
+	@JoinColumn(name = "tipo", insertable = false, updatable = false)
+	private Tipo objTipo;
+
+	@ManyToOne
+	@JoinColumn(name = "estado", insertable = false, updatable = false)
+	private Estado objEstado;
+
 }
