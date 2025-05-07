@@ -3,22 +3,29 @@ package com.proyecto_lp2.controller;
 import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ResourceLoader;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.proyecto_lp2.model.Producto;
-import com.proyecto_lp2.repository.ICategoriaRepository;
-import com.proyecto_lp2.repository.IEstadosRepository;
 import com.proyecto_lp2.repository.IProductoRepository;
 
 import jakarta.servlet.http.HttpServletResponse;
@@ -26,132 +33,117 @@ import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 
-@Controller
+@RestController
+@RequestMapping("/api/productos") 
+@CrossOrigin(origins = "http://localhost:4200")
 public class ProductoController {
 
 	@Autowired
-	ICategoriaRepository icate;
+	private IProductoRepository iprod;
+	
+	 @GetMapping
+	    public ResponseEntity<Map<String, Object>> mostrarGestionProductos(
+	            @RequestParam(defaultValue = "0") int page,
+	            @RequestParam(defaultValue = "10") int size) {
 
-	@Autowired
-	IProductoRepository iprod;
+	        Pageable pageable = PageRequest.of(page, size);
+	        Page<Producto> productosPage = iprod.findAll(pageable);
 
-	@Autowired
-	IEstadosRepository iest;
+	        Map<String, Object> response = new HashMap<>();
+	        response.put("productos", productosPage.getContent());
+	        response.put("currentPage", productosPage.getNumber());
+	        response.put("totalItems", productosPage.getTotalElements());
+	        response.put("totalPages", productosPage.getTotalPages());
 
-	@PostMapping("/addprod")
-	public String addprod(@ModelAttribute Producto producto, Model model) {
+	        return ResponseEntity.ok(response);
+	    }
+
+	@PostMapping
+	public ResponseEntity<Producto> addprod(@RequestBody Producto producto) {
 		try {
-			iprod.save(producto);
-			model.addAttribute("lstProductos", iprod.findAll());
-			model.addAttribute("lstCategorias", icate.findAll());
-			model.addAttribute("lstEstados", iest.findAll());
+			Producto savedProducto = iprod.save(producto);
+			return ResponseEntity.status(HttpStatus.CREATED).body(savedProducto);
 		} catch (Exception e) {
-			// TODO: handle exception
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build(); 
 		}
-		return "product-management";
 	}
 
-	@GetMapping("/edit/prod/{id}")
-	public String editprod(@PathVariable String id, Model model) {
-		Producto producto = iprod.findById(id).orElse(null);
-		if (producto != null) {
-			model.addAttribute("producto", producto);
-			model.addAttribute("lstCategorias", icate.findAll());
-			model.addAttribute("lstEstados", iest.findAll());
+	@PutMapping("/{id}")
+	public ResponseEntity<Producto> updateprod(@PathVariable String id, @RequestBody Producto producto) {
+		if (!iprod.existsById(id)) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); 
+		}
+
+		producto.setIdprod(id); 
+		Producto updatedProducto = iprod.save(producto);
+		return ResponseEntity.ok(updatedProducto); 
+	}
+
+	private boolean deleteProductById(String id) {
+		if (!iprod.existsById(id)) {
+			return false;
+		}
+		iprod.deleteById(id);
+		return true;
+	}
+
+
+	@DeleteMapping("/{id}")
+	public ResponseEntity<Map<String, Boolean>> eliminarprod(@PathVariable String id) {
+		boolean wasDeleted = deleteProductById(id);
+
+		Map<String, Boolean> result = new HashMap<>();
+		result.put("deleted", wasDeleted);
+
+		if (wasDeleted) {
+			return ResponseEntity.ok(result); 
 		} else {
-			return "redirect:/product-management";
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
+
 		}
-		return "edit-product";
 	}
 
-	@PostMapping("/updateprod")
-	public String updateprod(@ModelAttribute Producto producto, Model model) {
-		try {
-			iprod.save(producto);
-			model.addAttribute("producto", new Producto());
-			model.addAttribute("lstProductos", iprod.findAll());
-			model.addAttribute("lstCategorias", icate.findAll());
-			model.addAttribute("lstEstados", iest.findAll());
-			return "product-management";
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
-		return "product-management";
-	}
-
-	@GetMapping("/eliminar/{id}")
-	public String eliminarprod(@PathVariable String id, Model model) {
-		try {
-			iprod.deleteById(id); // Eliminar producto por id
-			model.addAttribute("producto", new Producto());
-			model.addAttribute("lstProductos", iprod.findAll());
-			model.addAttribute("lstCategorias", icate.findAll());
-			model.addAttribute("lstEstados", iest.findAll());
-		} catch (Exception e) {
-			model.addAttribute("error", "Error al eliminar el producto con ID: " + id);
-			return "product-management"; // Vuelve a la página de gestión con un mensaje de error
-		}
-		return "product-management"; // Redirige a la página de gestión de productos
-	}
-
-	@GetMapping("/detail/{id}")
-	public String getProductDetail(@PathVariable String id, Model model) {
-		// buscar ID
+	@GetMapping("/{id}")
+	public ResponseEntity<Producto> getProductDetail(@PathVariable String id) {
 		Producto producto = iprod.findById(id).orElse(null);
-
-		if (producto != null) {
-			model.addAttribute("producto", producto);
-			model.addAttribute("lstProductos", iprod.findAll());
-
-			if (producto.getStock() <= 10 && producto.getStock() > 0) {
-				model.addAttribute("alertaStock", true);
-			} else {
-				model.addAttribute("alertaStock", false);
-			}
-
-			return "product-detail";
-		} else {
-			return "redirect:/productos";
+		if (producto == null) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); 
 		}
+
+		return ResponseEntity.ok(producto); 
 	}
 
-	@PostMapping("/products/filter/price/between")
-	public String filterProducts(@RequestParam Double minPrice, @RequestParam Double maxPrice, Model model) {
-
+	// Filtrar productos por rango de precios
+	@GetMapping("/filter/price/between")
+	public ResponseEntity<List<Producto>> filterProducts(@RequestParam Double minPrice, @RequestParam Double maxPrice) {
 		List<Producto> filteredProducts = iprod.findByPrecioBetween(minPrice, maxPrice);
-
-		// Agrega la lista de productos filtrados al modelo
-		model.addAttribute("lstProductos", filteredProducts);
-		model.addAttribute("lstCategorias", icate.findAll());
-
-		return "shop";
+		return ResponseEntity.ok(filteredProducts); 
 	}
+
 
 	@GetMapping("/precio/fijo/100")
-	public String fixedPrice100(Model model) {
-		model.addAttribute("lstProductos", iprod.findByPrecioLessThan(100.00));
-		model.addAttribute("lstCategorias", icate.findAll());
-		return "shop";
+	public ResponseEntity<List<Producto>> fixedPrice100() {
+		List<Producto> productos = iprod.findByPrecioLessThan(100.00);
+		return ResponseEntity.ok(productos); 
 	}
 
 	@GetMapping("/precio/fijo/1000")
-	public String fixedPrice1000(Model model) {
-		model.addAttribute("lstProductos", iprod.findByPrecioLessThan(1000.00));
-		model.addAttribute("lstCategorias", icate.findAll());
-		return "shop";
+	public ResponseEntity<List<Producto>> fixedPrice1000() {
+		List<Producto> productos = iprod.findByPrecioLessThan(1000.00);
+		return ResponseEntity.ok(productos);
 	}
 
 	@Autowired
-	private DataSource dataSource; 
+	private DataSource dataSource;
 
 	@Autowired
-	private ResourceLoader resourceLoader; 
+	private ResourceLoader resourceLoader;
 
 	@GetMapping("/reportes/catalogo")
 	public void reporteCatalogo(HttpServletResponse response) {
-		
+
 		response.setHeader("Content-Disposition", "attachment; filename=\"catalogo.pdf\";");
-		
+
 		response.setHeader("Content-Disposition", "inline;");
 
 		response.setContentType("application/pdf");
@@ -167,19 +159,19 @@ public class ProductoController {
 
 	@PostMapping("/reportes/catalogo/filtro")
 	public void reporteCatalogoCategoria(@RequestParam int id, HttpServletResponse response) {
-		
+
 		response.setHeader("Content-Disposition", "attachment; filename=\"catalogoFiltro.pdf\";");
-		
+
 		response.setHeader("Content-Disposition", "inline;");
 
 		response.setContentType("application/pdf");
 
 		try {
-			
+
 			HashMap<String, Object> parametros = new HashMap<>();
 			parametros.put("categoria", id);
 			String ru = resourceLoader.getResource("classpath:static/catalogoFiltro.jasper").getURI().getPath();
-			
+
 			JasperPrint jasperPrint = JasperFillManager.fillReport(ru, parametros, dataSource.getConnection());
 			OutputStream outStream = response.getOutputStream();
 			JasperExportManager.exportReportToPdfStream(jasperPrint, outStream);

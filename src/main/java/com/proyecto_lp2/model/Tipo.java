@@ -8,12 +8,11 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "tb_cab_boleta")
-public class CabeceraBoleta {
+@Table(name = "tb_tipos")
+public class Tipo {
 
 	@Id
-	@Column(name = "num_bol")
-	private String numbol;
-	private String fch_bol;
-	private int cod_cliente;
+	@Column(name = "idtipo")
+	private int tipo;
+	private String descripcion;
 }
