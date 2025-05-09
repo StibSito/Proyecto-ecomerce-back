@@ -42,7 +42,7 @@ public class VentaService {
 		Optional<CabeceraBoleta> ultimaBoleta = cabeceraBoletaRepository.findTopByOrderByNumbolDesc();
 
 		if (ultimaBoleta.isPresent()) {
-			String ultimoCodigo = ultimaBoleta.get().getNumbol();
+			String ultimoCodigo = ultimaBoleta.get().getFch_bol();
 			int numero = Integer.parseInt(ultimoCodigo.substring(1)) + 1;
 			codigo = String.format("B%04d", numero);
 		}

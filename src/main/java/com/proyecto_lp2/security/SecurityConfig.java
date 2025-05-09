@@ -21,12 +21,14 @@ public class SecurityConfig {
         http.cors(withDefaults()).
                 csrf(csrf -> csrf.disable()) // Deshabilita CSRF para la API de prueba
                 .authorizeHttpRequests(auth -> auth
-                                .requestMatchers(HttpMethod.GET, "/api/productos/**").permitAll() // GET es público
-                                .requestMatchers(HttpMethod.POST, "/api/productos/**").permitAll() // POST solo ADMIN
+                                .requestMatchers(HttpMethod.GET, "/api/productos/**").permitAll()
+                                .requestMatchers(HttpMethod.POST, "/api/productos/**").permitAll() 
                                 .requestMatchers(HttpMethod.POST, "/api/usuarios/registrar").permitAll()
                                 .requestMatchers(HttpMethod.PUT, "/api/productos/**").permitAll()
                                 .requestMatchers(HttpMethod.GET,"/api/estados/**").permitAll()
                                 .requestMatchers(HttpMethod.GET,"/api/categorias/**").permitAll()
+                                .requestMatchers(HttpMethod.GET,"/api/shop/**").permitAll()
+                                .requestMatchers(HttpMethod.POST,"/api/shop/**").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .httpBasic(withDefaults()); // método de autenticación .formLogin()

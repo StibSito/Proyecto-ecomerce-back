@@ -13,6 +13,6 @@ public class Estado {
 
 	@Id
 	@Column(name = "idestado")
-	private int estado;
+	private int id;
 	private String descripcion;
 }

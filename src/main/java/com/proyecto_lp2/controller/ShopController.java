@@ -1,63 +1,45 @@
 package com.proyecto_lp2.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import com.proyecto_lp2.model.Categoria;
+import com.proyecto_lp2.model.Producto;
 import com.proyecto_lp2.repository.ICategoriaRepository;
 import com.proyecto_lp2.repository.IProductoRepository;
 
-import jakarta.servlet.http.HttpSession;
-
-@Controller
+@RestController
+@RequestMapping("/api/shop")
+@CrossOrigin(origins = "http://localhost:4200") 
 public class ShopController {
 
-	@Autowired
-	ICategoriaRepository icate;
+    @Autowired
+    private ICategoriaRepository categoriaRepository;
 
-	@Autowired
-	IProductoRepository iprod;
+    @Autowired
+    private IProductoRepository productoRepository;
 
-	@GetMapping("/shop")
-	public String shop(Model model, HttpSession session) {
-		model.addAttribute("lstCategorias", icate.findAll());
-		model.addAttribute("lstProductos", iprod.findAll());
-		model.addAttribute("cantArticulos", session.getAttribute("cantArticulos"));
+    @PostMapping("/filto/categorias")
+    public ResponseEntity<List<Producto>> filtro(@RequestParam(required = false) int categoriaId) {
+        if (categoriaId == 0) {
+            List<Producto> productos = productoRepository.findAll();
+            return ResponseEntity.status(HttpStatus.OK).body(productos);
+        } else {
+            List<Producto> productos = productoRepository.findByIdcategoria(categoriaId); 
+            return ResponseEntity.status(HttpStatus.OK).body(productos);
+        }
+    }
 
-		return "shop";
-	}
-
-	@PostMapping("/filto/categorias")
-	public String filtro(@RequestParam Categoria id, Model model, HttpSession session) {
-		model.addAttribute("lstCategorias", icate.findAll());
-
-		if (id == null) {
-			model.addAttribute("lstProductos", iprod.findAll());
-			model.addAttribute("cantArticulos", session.getAttribute("cantArticulos"));
-		} else {
-			model.addAttribute("lstProductos", iprod.findByIdcategoria(id));
-			model.addAttribute("cantArticulos", session.getAttribute("cantArticulos"));
-		}
-
-		return "shop";
-	}
-
-	@GetMapping("/filtro/{id}")
-	public String filtroLinks(@PathVariable Categoria id, Model model, HttpSession session) {
-		model.addAttribute("lstCategorias", icate.findAll());
-		if (id == null) {
-			model.addAttribute("lstProductos", iprod.findAll());
-			model.addAttribute("cantArticulos", session.getAttribute("cantArticulos"));
-		} else {
-			model.addAttribute("lstProductos", iprod.findByIdcategoria(id));
-			model.addAttribute("cantArticulos", session.getAttribute("cantArticulos"));
-		}
-		return "shop";
-	}
-
+    @GetMapping("/filtro/{id}")
+    public ResponseEntity<List<Producto>> filtroLinks(@PathVariable int id) {
+        List<Producto> productos = productoRepository.findByIdcategoria(id);
+        if (productos.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(productos);
+    }
 }

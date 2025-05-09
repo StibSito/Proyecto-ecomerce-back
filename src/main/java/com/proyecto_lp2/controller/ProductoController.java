@@ -113,7 +113,6 @@ public class ProductoController {
 		return ResponseEntity.ok(producto); 
 	}
 
-	// Filtrar productos por rango de precios
 	@GetMapping("/filter/price/between")
 	public ResponseEntity<List<Producto>> filterProducts(@RequestParam Double minPrice, @RequestParam Double maxPrice) {
 		List<Producto> filteredProducts = iprod.findByPrecioBetween(minPrice, maxPrice);
